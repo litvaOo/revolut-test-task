@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    image: postgres:16.3-alpine
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+      - POSTGRES_PASSWORD=test
+
+  web:
+    build: service
+    ports:
+      - 3000:80
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=test
+      - DATABASE_PASSWORD=test
+      - DATABASE_NAME=test
+    volumes:
+      - ./service:/service
