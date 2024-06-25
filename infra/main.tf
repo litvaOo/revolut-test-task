@@ -193,15 +193,16 @@ module "alb" {
 
   target_groups = {
     instance = {
-      name_prefix       = "test"
-      create_attachment = false
-      backend_protocol  = "HTTP"
-      backend_port      = 80
-      target_type       = "ip"
+      name_prefix          = "test"
+      create_attachment    = false
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      deregistration_delay = 15
+      target_type          = "ip"
       health_check = {
         path                = "/"
         protocol            = "HTTP"
-        matcher             = "200"
+        matcher             = "404"
         interval            = 30
         timeout             = 5
         healthy_threshold   = 2
@@ -219,9 +220,21 @@ resource "aws_security_group" "ecs" {
     protocol    = "tcp"
     cidr_blocks = module.vpc.public_subnets_cidr_blocks
   }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   egress {
-    from_port   = 0
-    to_port     = 0
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = module.vpc.public_subnets_cidr_blocks
   }
@@ -256,6 +269,7 @@ module "ecs" {
   services = {
     test-task = {
       subnet_ids             = module.vpc.private_subnets
+      security_group_ids     = [aws_security_group.ecs.id]
       task_exec_iam_role_arn = aws_iam_role.execution.arn
       load_balancer = {
         service = {
