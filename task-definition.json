@@ -17,7 +17,7 @@
             "essential": true,
             "environment": [{
                 "name": "DATABASE_HOST",
-                "value: "test-task.czayysy80mmb.us-east-1.rds.amazonaws.com"
+                "value": "test-task.czayysy80mmb.us-east-1.rds.amazonaws.com"
               },
               {
                 "name": "DATABASE_USER",
