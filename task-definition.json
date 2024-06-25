@@ -16,24 +16,24 @@
             ],
             "essential": true,
             "environment": [{
-                name: "DATABASE_HOST",
-                value: "test-task.czayysy80mmb.us-east-1.rds.amazonaws.com"
+                "name": "DATABASE_HOST",
+                "value: "test-task.czayysy80mmb.us-east-1.rds.amazonaws.com"
               },
               {
-                name: "DATABASE_USER",
-                value: "testuser"
+                "name": "DATABASE_USER",
+                "value": "testuser"
               },
               {
-                name: "DATABASE_PORT",
-                value: "5432"
+                "name": "DATABASE_PORT",
+                "value": "5432"
               },
               {
-                name: "DATABASE_NAME",
-                value: "testdb"
+                "name": "DATABASE_NAME",
+                "value": "testdb"
               },
               {
-                name: "DATABASE_PASSWORD",
-                valueFrom: "arn:aws:secretsmanager:us-east-1:724373494445:secret:rds!db-98b350a5-fa3d-4378-abdb-688e8e088fad-sYxUEH:password"
+                "name": "DATABASE_PASSWORD",
+                "valueFrom": "arn:aws:secretsmanager:us-east-1:724373494445:secret:rds!db-98b350a5-fa3d-4378-abdb-688e8e088fad-sYxUEH:password"
               }
             ],
             "mountPoints": [],
