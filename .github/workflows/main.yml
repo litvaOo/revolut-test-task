@@ -6,6 +6,7 @@ on:
     paths:
       - "service/**"
       - "task_definition.json"
+      - ".github/**"
 
 jobs:
   build:
