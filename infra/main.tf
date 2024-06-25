@@ -226,6 +226,12 @@ resource "aws_security_group" "ecs" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = module.vpc.database_subnets_cidr_blocks
+  }
   egress {
     from_port   = 443
     to_port     = 443
