@@ -49,7 +49,6 @@ async fn get_birthday(
     Path(name): Path<String>,
     State(state): State<AppState>,
 ) -> impl IntoResponse {
-    println!("Get date for {}", name);
     let rec: Option<record::Model> = Record::find()
         .filter(record::Column::Username.eq(&name))
         .one(&state.db)
@@ -77,7 +76,7 @@ async fn get_birthday(
             } else {
                 current_date
             };
-            let diff = current_date - rec.birthday;
+            let diff = this_year_birthday.unwrap() - current_date;
             let days = diff.num_days();
             let greeting = format!("Hello, {}! Your birthday is in {} days", name, days);
             (StatusCode::OK, Json(json!({ "message": greeting })))
@@ -95,7 +94,6 @@ async fn set_birthday(
     State(state): State<AppState>,
     Json(payload): Json<RequestBody>,
 ) -> impl IntoResponse {
-    println!("Setting new date for {}", name);
     let new_record = record::ActiveModel {
         username: Set(name),
         birthday: Set(NaiveDate::from_str(&payload.dateOfBirth.to_string()).unwrap()),

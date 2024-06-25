@@ -8,7 +8,9 @@ services:
       - POSTGRES_PASSWORD=test
 
   web:
-    build: service
+    build:
+      dockerfile: Dockerfile.ci
+      context: service
     ports:
       - 3000:80
     environment:
