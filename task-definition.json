@@ -32,7 +32,7 @@
                 "value": "testdb"
               }
             ],
-            secrets: [
+            "secrets": [
               {
                 "name": "DATABASE_PASSWORD",
                 "valueFrom": "arn:aws:secretsmanager:us-east-1:724373494445:secret:rds!db-98b350a5-fa3d-4378-abdb-688e8e088fad-sYxUEH:password"
