@@ -47,7 +47,7 @@
             "stopTimeout": 120,
             "user": "0",
             "privileged": false,
-            "readonlyRootFilesystem": true,
+            "readonlyRootFilesystem": false,
             "interactive": false,
             "pseudoTerminal": false,
             "logConfiguration": {
