@@ -3,6 +3,6 @@ RUN cargo install sea-orm-cli
 WORKDIR /service
 COPY . .
 RUN cargo install --path .
-
+RUN cd migration && cargo build
 CMD DATABASE_URL="postgres://$DATABASE_USER:$DATABASE_PASSWORD@$DATABASE_HOST:5432/$DATABASE_NAME" sea-orm-cli migrate refresh && service
 
