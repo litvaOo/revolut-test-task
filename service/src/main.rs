@@ -12,6 +12,8 @@ use sea_orm::*;
 use sea_orm_migration::prelude::*;
 use serde::Deserialize;
 use serde_json::json;
+use tower_http::trace::{self, TraceLayer};
+use tracing::Level;
 
 use urlencoding::encode;
 mod entities;
@@ -40,7 +42,10 @@ async fn main() {
     );
     let database_name = std::env::var("DATABASE_NAME").unwrap();
 
-    println!("Connecting to database: {}", database_url);
+    tracing_subscriber::fmt()
+        .with_max_level(Level::INFO)
+        .compact()
+        .init();
     let db = Database::connect(format!("{}/{}", database_url, database_name))
         .await
         .unwrap();
@@ -49,7 +54,12 @@ async fn main() {
     let app = Router::new()
         .route("/hello/:username", get(get_birthday))
         .route("/hello/:username", put(set_birthday))
-        .with_state(shared_state);
+        .with_state(shared_state)
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
+                .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
+        );
     let listener = tokio::net::TcpListener::bind("0.0.0.0:80").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
