@@ -12,8 +12,13 @@ use sea_orm::*;
 use sea_orm_migration::prelude::*;
 use serde::Deserialize;
 use serde_json::json;
+
+use urlencoding::encode;
 mod entities;
 use entities::{prelude::*, *};
+
+mod migrator;
+use migrator::Migrator;
 
 #[derive(Clone)]
 struct AppState {
@@ -28,14 +33,18 @@ async fn main() {
     let database_password = std::env::var("DATABASE_PASSWORD").unwrap();
     let database_url = format!(
         "postgres://{}:{}@{}:{}",
-        database_user, database_password, database_host, database_port
+        database_user,
+        encode(database_password.as_str()),
+        database_host,
+        database_port
     );
     let database_name = std::env::var("DATABASE_NAME").unwrap();
 
+    println!("Connecting to database: {}", database_url);
     let db = Database::connect(format!("{}/{}", database_url, database_name))
         .await
         .unwrap();
-
+    Migrator::refresh(&db).await.unwrap();
     let shared_state = AppState { db };
     let app = Router::new()
         .route("/hello/:username", get(get_birthday))
