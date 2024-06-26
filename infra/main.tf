@@ -175,10 +175,8 @@ module "alb" {
   }
   security_group_egress_rules = {
     all_traffic = {
-      from_port = 0
-      to_port   = 0
-      protocol  = "-1"
-      cidr_ipv4 = "0.0.0.0/0"
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
     }
   }
   listeners = {
@@ -218,13 +216,25 @@ resource "aws_security_group" "ecs" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = module.vpc.public_subnets_cidr_blocks
+    cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [module.alb.security_group_id]
+  }
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [module.alb.security_group_id]
   }
   ingress {
     from_port   = 5432
@@ -242,7 +252,7 @@ resource "aws_security_group" "ecs" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = module.vpc.public_subnets_cidr_blocks
+    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 5432
